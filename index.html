@@ -1,1 +1,299 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>8/3 - Mùa Hoa Đào Tặng Bạn</title>
+    <style>
+        :root {
+            --primary: #ff4d6d;
+            --secondary: #ff85a1;
+            --accent: #ffb703;
+            --bg-pink: #fff0f3; /* Hồng cực nhạt kiểu hoa đào */
+            --card-width: 340px;
+        }
 
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--bg-pink);
+            font-family: 'Segoe UI', Arial, sans-serif;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Hiệu ứng hoa đào bay lên nền */
+        .bg-sakura {
+            position: absolute;
+            bottom: -50px;
+            color: rgba(255, 183, 197, 0.8);
+            font-size: 18px;
+            pointer-events: none;
+            z-index: 1;
+            animation: rise linear infinite;
+            user-select: none;
+        }
+
+        @keyframes rise {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-110vh) translateX(var(--spread)) rotate(360deg); opacity: 0; }
+        }
+
+        .scene {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1200px;
+            z-index: 10;
+        }
+
+        .gift-box {
+            position: relative;
+            width: 200px;
+            height: 180px;
+            background: var(--primary);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 30px rgba(255, 77, 109, 0.3);
+        }
+
+        .lid {
+            position: absolute;
+            top: -10px;
+            width: 110px;
+            height: 40px;
+            background: var(--primary);
+            transition: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 20;
+            border-bottom: 2px solid rgba(0,0,0,0.1);
+        }
+        .lid-left { left: -5px; border-radius: 5px 0 0 5px; transform-origin: left; }
+        .lid-right { right: -5px; border-radius: 0 5px 5px 0; transform-origin: right; }
+
+        .small-box {
+            position: absolute;
+            width: 100px;
+            height: 90px;
+            background: var(--secondary);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            opacity: 0;
+            border-radius: 5px;
+            transition: 0.5s ease;
+            z-index: 5;
+        }
+
+        .envelope {
+            position: absolute;
+            width: 140px;
+            height: 90px;
+            background: #ffffff;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            opacity: 0;
+            transition: 0.6s;
+            z-index: 4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 4px;
+        }
+
+        .card {
+            position: absolute;
+            width: var(--card-width);
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(255, 77, 109, 0.2);
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.1);
+            left: 50%;
+            top: 50%;
+            z-index: 100;
+            transition: 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .card-photo {
+            width: 100%;
+            height: 250px;
+            overflow: hidden;
+            display: flex;
+            background: #f9f9f9;
+        }
+
+        .card-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 20%;
+            display: none;
+        }
+
+        .card-content {
+            padding: 20px 20px 30px 20px;
+            text-align: center;
+        }
+
+        .open-1 .lid-left { transform: rotateY(-135deg); }
+        .open-1 .lid-right { transform: rotateY(135deg); }
+        .open-1 .small-box { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+
+        .open-2 .gift-box { transform: scale(0.7); opacity: 0.1; filter: blur(5px); }
+        .open-2 .small-box { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+        .open-2 .envelope { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+
+        .open-3 .card { transform: translate(-50%, -50%) scale(1); opacity: 1; pointer-events: auto; }
+        .open-3 .envelope { opacity: 0; }
+
+        /* Cánh hoa bùng nổ */
+        .sakura-burst {
+            position: absolute;
+            pointer-events: none;
+            z-index: 110;
+            animation: burst 1.8s ease-out forwards;
+        }
+
+        @keyframes burst {
+            0% { transform: translate(-50%, -50%) scale(0) rotate(0deg); opacity: 1; }
+            100% { transform: translate(var(--tx), var(--ty)) scale(1.2) rotate(var(--tr)); opacity: 0; }
+        }
+
+        .ribbon { position: absolute; background: var(--accent); z-index: 15; width: 30px; height: 100%; left: 50%; transform: translateX(-50%); }
+
+        .instruction {
+            position: absolute;
+            bottom: 40px;
+            color: var(--primary);
+            font-weight: bold;
+            font-size: 14px;
+            z-index: 20;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="scene" id="mainScene" onclick="handleStep()">
+        <div class="gift-box">
+            <div class="lid lid-left"></div>
+            <div class="lid lid-right"></div>
+            <div class="ribbon"></div>
+        </div>
+        <div class="small-box"><div class="ribbon" style="width:12px; background:white;"></div></div>
+        <div class="envelope">💌</div>
+<audio id="bgMusic" loop>
+    <source src="nhac1.mp3" type="audio/mpeg">
+</audio>
+        
+        <div class="card">
+            <div class="card-photo">
+                <div id="placeholder" style="width:100%; display:flex; justify-content:center; align-items:center; color:#ccc; font-size:40px;">🌸</div>
+                <img src="https://scontent.fsgn2-6.fna.fbcdn.net/v/t39.30808-6/615564160_1239381311381571_6791346034644320579_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=53a332&_nc_eui2=AeHPMSjfQSx4Cj4m9WMVlbyxKfvDuPpitpwp-8O4-mK2nPwg67Q7PbsMEd3mvIohkMofYH-lIozvCE8nFM6tQ5iD&_nc_ohc=9cTy_7Y5rN0Q7kNvwF3q21p&_nc_oc=AdnWoVtoMZVKDcoZRQ7dAlO0PK9C-5TuDLqGFn59V49oeo6L_OZaJVhIrBaaXFZqKuO_pDJEjwFZ3K4SV5cjdO2k&_nc_zt=23&_nc_ht=scontent.fsgn2-6.fna&_nc_gid=cvIalKfsrC4mij8KTM9TTA&_nc_ss=8&oh=00_Afys1LFgFdcQ7SZIlVZ7JUKS24DXkJ3SNOg4vPK4jxvnTQ&oe=69B0209E" alt="8/3 Sakura" id="myPhoto">
+            </div>
+            
+            <div class="card-content">
+                <h2 style="color: var(--primary); margin: 0;">Happy Women's Day!</h2>
+                <p style="font-size: 1.1em; color: #333; margin: 15px 0;">Gửi đóa hoa rạng rỡ nhất... 🌸</p>
+                <p style="color: #666; line-height: 1.6; font-size: 14px;">Chúc bạn một ngày 8/3 thật dịu dàng, <br> luôn tỏa sáng và tràn đầy niềm vui!</p>
+                <div style="font-size: 25px; margin-top: 10px;">🌸💮🎐</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="instruction" id="guide">Chạm để nhận hoa đào</div>
+
+    <script>
+        // Xử lý hiển thị ảnh
+        window.addEventListener('load', function() {
+            const photo = document.getElementById('myPhoto');
+            const placeholder = document.getElementById('placeholder');
+            photo.onload = function() {
+                placeholder.style.display = 'none';
+                photo.style.display = 'block';
+            };
+            if (photo.complete) photo.onload();
+        });
+
+        // Tạo cánh hoa bay ở nền
+        function createSakuraBG() {
+            const petal = document.createElement('div');
+            petal.className = 'bg-sakura';
+            petal.innerText = ['🌸', '💮', '🌸', '✨'][Math.floor(Math.random() * 4)];
+            petal.style.left = Math.random() * 100 + 'vw';
+            petal.style.animationDuration = Math.random() * 5 + 5 + 's';
+            petal.style.setProperty('--spread', (Math.random() * 300 - 150) + 'px');
+            petal.style.fontSize = Math.random() * 10 + 15 + 'px';
+            document.body.appendChild(petal);
+            setTimeout(() => petal.remove(), 10000);
+        }
+        setInterval(createSakuraBG, 400);
+
+        // Hiệu ứng bùng nổ hoa đào khi mở thư
+        function burstSakura() {
+            const icons = ['🌸', '💮', '🌸', '💖'];
+            for (let i = 0; i < 35; i++) {
+                const s = document.createElement('div');
+                s.className = 'sakura-burst';
+                s.innerText = icons[Math.floor(Math.random() * icons.length)];
+                s.style.left = '50%'; s.style.top = '50%';
+                
+                const angle = Math.random() * Math.PI * 2;
+                const dist = Math.random() * 350 + 150;
+                s.style.setProperty('--tx', Math.cos(angle) * dist + 'px');
+                s.style.setProperty('--ty', Math.sin(angle) * dist + 'px');
+                s.style.setProperty('--tr', Math.random() * 720 + 'deg');
+                s.style.fontSize = Math.random() * 15 + 15 + 'px';
+                
+                document.body.appendChild(s);
+                setTimeout(() => s.remove(), 1800);
+            }
+        }
+
+        let step = 0;
+const scene = document.getElementById('mainScene');
+const guide = document.getElementById('guide');
+const music = document.getElementById('bgMusic'); // Khai báo biến nhạc
+
+function handleStep() {
+    step++;
+    
+    // Phát nhạc ngay lần chạm đầu tiên
+    if (music.paused) {
+        music.play().catch(error => console.log("Trình duyệt chặn tự động phát:", error));
+    }
+
+    if (step === 1) {
+        scene.classList.add('open-1');
+        guide.innerText = "Sắp có điều bất ngờ...";
+    } else if (step === 2) {
+        scene.classList.add('open-2');
+        guide.innerText = "Gần tới rồi!";
+    } else if (step === 3) {
+        scene.classList.add('open-3');
+        burstSakura();
+        guide.innerText = "Tặng bạn cả mùa xuân! 🌸";
+    } else {
+        scene.className = 'scene';
+        guide.innerText = "Mở lại lần nữa nhé?";
+        step = 0;
+        // Nếu muốn tắt nhạc khi đóng hộp thì thêm: music.pause(); music.currentTime = 0;
+        music.pause();
+        music.currentTime = 0;
+    }
+}
+    </script>
+</body>
+</html>       
